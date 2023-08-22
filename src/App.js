@@ -1,24 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import CourseHeading from "./components/CourseHeading/CourseHeading";
+import Footer from "./components/Footer/Footer";
+import InformationForm from "./components/InformationForm/InformationForm";
+import Navbar from "./components/Navbar/Navbar";
+
+const style = {
+  maxWidth: "1000px",
+  margin: "0 auto",
+  padding: "37px 40px",
+};
+
+const background = {
+  background: "linear-gradient(135deg, #fff 0%, #d0e8eb 100%)",
+};
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Navbar />
+      <div style={background}>
+        <div style={style}>
+          <CourseHeading />
+          <InformationForm />
+        </div>
+      </div>
+      <Footer />
+    </>
   );
 }
 
