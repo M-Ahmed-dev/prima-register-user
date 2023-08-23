@@ -4,12 +4,6 @@ import React from "react";
 const LoggerMessage = () => {
   const theme = useTheme();
 
-  const gridItems = {
-    display: "flex",
-    flexDirection: "column",
-    gap: "30px",
-  };
-
   return (
     <Box
       mt="59px"
@@ -21,7 +15,7 @@ const LoggerMessage = () => {
     >
       <Box>
         <Text fontSize="20px" sx={theme.fonts.primary}>
-          Please Register to View this!
+          Oops! you dont have access. Please Register to View this!
         </Text>
       </Box>
     </Box>
