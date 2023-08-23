@@ -1,17 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  useLocation,
-  useParams,
-  useSearchParams,
-} from "react-router-dom";
+import { Route, Routes, useSearchParams } from "react-router-dom";
 import CourseHeading from "./components/CourseHeading/CourseHeading";
 import Footer from "./components/Footer/Footer";
 import InformationForm from "./components/InformationForm/InformationForm";
-import LoggerDetails from "./components/LoggerDetails/LoggerDetails";
 import Navbar from "./components/Navbar/Navbar";
 import RegisterMessage from "./components/RegisterMessage/RegisterMessage";
 
@@ -31,9 +23,6 @@ function App() {
   let [searchParams] = useSearchParams();
 
   const data = searchParams.get("data");
-  // const encodedData =
-  //   "eyJvcmRlcl9pZCI6ODMyNiwiaXRlbV9pZCI6MjYsInZfaWQiOjEwMzgsImVtYWlsIjoiMXNhbXBsZUBibGsuY20iLCJlbmRwb2ludCI6Imh0dHBzOlwvXC9tYXhlbml1cy5hZ2VuY3lcL3N0YWdpbmdcL29iZXR1cyJ9";
-
   const url = `https://maxenius.agency/staging/obetus/wp-json/priima_user/verification?data=${data}`;
 
   useEffect(() => {

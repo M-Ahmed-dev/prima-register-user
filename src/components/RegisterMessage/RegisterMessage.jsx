@@ -7,7 +7,7 @@ const RegisterMessage = () => {
   return (
     <Box>
       <Text sx={theme.fonts.secondary} fontSize="24px">
-        Oops! You dont have Access, please register to Priima .
+        Oops! You dont have Access, please register to Priima.
       </Text>
     </Box>
   );
