@@ -17,7 +17,7 @@ const CourseHeading = ({ courses }) => {
         Customizable default message from priima settings!
       </Text>
 
-      <Box mt="10px">
+      <Box mt="37px">
         <Text sx={theme.fonts.secondary}>You have been added to courses:</Text>
 
         {loading ? (

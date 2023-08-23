@@ -5,12 +5,15 @@ import App from "./App";
 
 import { ChakraProvider } from "@chakra-ui/react";
 import theme from "./components/theme/theme";
+import { BrowserRouter as Router } from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
-      <App />
+      <Router>
+        <App />
+      </Router>
     </ChakraProvider>
   </React.StrictMode>
 );

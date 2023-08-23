@@ -1,9 +1,19 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import CourseHeading from "./components/CourseHeading/CourseHeading";
 import Footer from "./components/Footer/Footer";
 import InformationForm from "./components/InformationForm/InformationForm";
+import LoggerDetails from "./components/LoggerDetails/LoggerDetails";
 import Navbar from "./components/Navbar/Navbar";
+import RegisterMessage from "./components/RegisterMessage/RegisterMessage";
 
 const style = {
   maxWidth: "1000px",
@@ -13,15 +23,18 @@ const style = {
 
 const background = {
   background: "linear-gradient(135deg, #fff 0%, #d0e8eb 100%)",
+  height: "100vh",
 };
 
 function App() {
   const [apiData, setApiData] = useState([]);
+  let [searchParams] = useSearchParams();
 
-  const encodedData =
-    "eyJvcmRlcl9pZCI6ODMyNywiaXRlbV9pZCI6MjgsInZfaWQiOjEwMzgsImVtYWlsIjoiMXNhbXBsZUBibGsuZW0iLCJlbmRwb2ludCI6Imh0dHBzOlwvXC9tYXhlbml1cy5hZ2VuY3lcL3N0YWdpbmdcL29iZXR1cyJ9";
-  const decodedData = JSON.parse(atob(encodedData));
-  const url = `${decodedData.endpoint}/wp-json/priima_user/verification?data=${encodedData}`;
+  const data = searchParams.get("data");
+  // const encodedData =
+  //   "eyJvcmRlcl9pZCI6ODMyNiwiaXRlbV9pZCI6MjYsInZfaWQiOjEwMzgsImVtYWlsIjoiMXNhbXBsZUBibGsuY20iLCJlbmRwb2ludCI6Imh0dHBzOlwvXC9tYXhlbml1cy5hZ2VuY3lcL3N0YWdpbmdcL29iZXR1cyJ9";
+
+  const url = `https://maxenius.agency/staging/obetus/wp-json/priima_user/verification?data=${data}`;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,20 +47,38 @@ function App() {
     };
 
     fetchData();
-  }, []);
+  }, [url]);
 
   console.log(apiData);
 
   return (
     <>
-      <Navbar />
-      <div style={background}>
-        <div style={style}>
-          <CourseHeading courses={apiData.courses} />
-          <InformationForm data={apiData.form_fields} />
-        </div>
-      </div>
-      <Footer />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <>
+                <Navbar />
+                <div style={background}>
+                  <div style={style}>
+                    {/* Conditional rendering */}
+                    {data ? (
+                      <>
+                        <CourseHeading courses={apiData.courses} />
+                        <InformationForm data={apiData.form_fields} />
+                      </>
+                    ) : (
+                      <RegisterMessage />
+                    )}
+                  </div>
+                </div>
+                <Footer />
+              </>
+            </>
+          }
+        />
+      </Routes>
     </>
   );
 }
