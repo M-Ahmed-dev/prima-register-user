@@ -44,7 +44,7 @@ const InformationForm = ({ data }) => {
             <Input
               background="#fff"
               maxWidth="100%"
-              minWidth="313px"
+              width="313px"
               height="25px"
               placeholder={field.name}
               boxShadow="0px 0px 2px 0px rgba(33, 91, 124, 0.50) inset"
