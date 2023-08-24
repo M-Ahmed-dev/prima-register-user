@@ -15,7 +15,6 @@ const style = {
 
 const background = {
   background: "linear-gradient(135deg, #fff 0%, #d0e8eb 100%)",
-  height: "100vh",
 };
 
 function App() {

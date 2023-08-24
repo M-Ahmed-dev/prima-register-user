@@ -5,7 +5,7 @@ const RegisterMessage = () => {
   const theme = useTheme();
   return (
     <Box>
-      <Text sx={theme.fonts.secondary} fontSize="24px">
+      <Text sx={theme.fonts.secondary} fontSize="30px">
         Oops! You dont have Access, please register to Priima.
       </Text>
     </Box>

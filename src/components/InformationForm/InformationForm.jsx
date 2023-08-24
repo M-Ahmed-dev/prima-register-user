@@ -43,7 +43,8 @@ const InformationForm = ({ data }) => {
             </FormLabel>
             <Input
               background="#fff"
-              width="313px"
+              maxWidth="100%"
+              minWidth="313px"
               height="25px"
               placeholder={field.name}
               boxShadow="0px 0px 2px 0px rgba(33, 91, 124, 0.50) inset"
@@ -67,36 +68,51 @@ const InformationForm = ({ data }) => {
     <Box
       mt="59px"
       borderRadius="10px"
-      height="598px"
       background="#E6F2F3"
       boxShadow="0px 2px 5px 0px rgba(33, 91, 124, 0.15)"
-      padding="50px 130px"
+      display="flex"
+      padding="52px 0px 90px"
     >
-      <Box>
-        <Text fontSize="20px" sx={theme.fonts.primary}>
-          Information:
-        </Text>
-      </Box>
-      <Box mt="64px" display="grid" gap="25px" gridTemplateColumns="auto auto">
-        {loading ? (
-          <Text>Loading...</Text>
-        ) : (
-          <>
-            {renderFields(data.basic)}
-            {renderFields(data.additional)}
-          </>
-        )}
-      </Box>
+      <Box maxWidth="85%" margin="auto">
+        <Box>
+          <Text fontSize="20px" sx={theme.fonts.primary}>
+            Information:
+          </Text>
+        </Box>
+        <Box
+          mt="64px"
+          display="grid"
+          gridTemplateColumns="auto auto"
+          // gridTemplateColumns="repeat(auto-fit, minmax(200px, 1fr))" /* Responsive grid */
+          alignItems="baseline"
+          gap="25px"
+          sx={{
+            "@media screen and (max-width: 768px)": {
+              display: "flex",
+              flexDirection: "column",
+            },
+          }}
+        >
+          {loading ? (
+            <Text>Loading...</Text>
+          ) : (
+            <>
+              {renderFields(data.basic)}
+              {renderFields(data.additional)}
+            </>
+          )}
+        </Box>
 
-      <Button
-        mt="86px"
-        display="flex"
-        width="200px"
-        color="#FFF"
-        background={theme.colors.primary}
-      >
-        Confirm
-      </Button>
+        <Button
+          mt="86px"
+          display="flex"
+          width="200px"
+          color="#FFF"
+          background={theme.colors.primary}
+        >
+          Confirm
+        </Button>
+      </Box>
     </Box>
   );
 };
