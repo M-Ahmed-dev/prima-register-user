@@ -23,17 +23,30 @@ function App() {
   let [searchParams] = useSearchParams();
 
   const data = searchParams.get("data");
-  const newData = JSON.parse(atob(data));
-  console.log("newData", newData);
-  console.log("endpoint", newData.endpoint);
+  let newData = null;
 
-  const url = `${newData.endpoint}verification/?data=${data}`;
+  if (data) {
+    try {
+      newData = JSON.parse(atob(data));
+      console.log("newData", newData);
+    } catch (error) {
+      console.error("Error parsing newData:", error);
+    }
+  }
+
+  let url = ""; // Initialize the URL
+
+  if (newData && newData.endpoint) {
+    url = `${newData.endpoint}verification/?data=${data}`;
+  }
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(url);
-        setApiData(response.data);
+        if (url) {
+          const response = await axios.get(url);
+          setApiData(response.data);
+        }
       } catch (error) {
         console.log(error);
       }
