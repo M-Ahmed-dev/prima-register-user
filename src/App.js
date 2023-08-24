@@ -30,7 +30,7 @@ function App() {
       newData = JSON.parse(atob(data));
       console.log("newData", newData);
     } catch (error) {
-      console.error("Error parsing newData:", error);
+      console.error("Error parsing Data:", error);
     }
   }
 
