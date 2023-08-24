@@ -10,8 +10,6 @@ import {
 import React, { useEffect, useState } from "react";
 
 const InformationForm = ({ data }) => {
-  console.log("formData:", data);
-
   const theme = useTheme();
   const [loading, setLoading] = useState(true);
 

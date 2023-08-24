@@ -1,4 +1,4 @@
-import { Box, Button, Text, useTheme } from "@chakra-ui/react";
+import { Box, Text, useTheme } from "@chakra-ui/react";
 import React from "react";
 
 const LoggerMessage = () => {
@@ -15,7 +15,7 @@ const LoggerMessage = () => {
     >
       <Box>
         <Text fontSize="20px" sx={theme.fonts.primary}>
-          Oops! you dont have access. Please Register to View this!
+          Oops! you dont have access. Please Register to View Priima!
         </Text>
       </Box>
     </Box>

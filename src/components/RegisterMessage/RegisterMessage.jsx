@@ -1,5 +1,4 @@
-import { Box, Text, theme } from "@chakra-ui/react";
-import { useTheme } from "@emotion/react";
+import { Box, Text, useTheme } from "@chakra-ui/react";
 import React from "react";
 
 const RegisterMessage = () => {

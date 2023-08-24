@@ -23,7 +23,11 @@ function App() {
   let [searchParams] = useSearchParams();
 
   const data = searchParams.get("data");
-  const url = `https://maxenius.agency/staging/obetus/wp-json/priima_user/verification?data=${data}`;
+  const newData = JSON.parse(atob(data));
+  console.log("newData", newData);
+  console.log("endpoint", newData.endpoint);
+
+  const url = `${newData.endpoint}verification/?data=${data}`;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,7 +40,7 @@ function App() {
     };
 
     fetchData();
-  }, [url]);
+  }, [data, url]);
 
   console.log(apiData);
 
@@ -51,7 +55,6 @@ function App() {
                 <Navbar />
                 <div style={background}>
                   <div style={style}>
-                    {/* Conditional rendering */}
                     {data ? (
                       <>
                         <CourseHeading courses={apiData.courses} />
