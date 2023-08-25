@@ -102,7 +102,6 @@ const InformationForm = ({ data }) => {
             </>
           )}
         </Box>
-
         <Button
           mt="86px"
           display="flex"

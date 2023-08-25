@@ -4,6 +4,8 @@ import { Route, Routes, useSearchParams } from "react-router-dom";
 import CourseHeading from "./components/CourseHeading/CourseHeading";
 import Footer from "./components/Footer/Footer";
 import InformationForm from "./components/InformationForm/InformationForm";
+import LoggerCourse from "./components/LoggerDetails/LoggerCourse";
+import LoggerDetails from "./components/LoggerDetails/LoggerDetails";
 import Navbar from "./components/Navbar/Navbar";
 import RegisterMessage from "./components/RegisterMessage/RegisterMessage";
 
@@ -27,7 +29,6 @@ function App() {
   if (data) {
     try {
       newData = JSON.parse(atob(data));
-      console.log("newData", newData);
     } catch (error) {
       console.error("Error parsing newData:", error);
     }
@@ -54,7 +55,7 @@ function App() {
     fetchData();
   }, [data, url]);
 
-  console.log(apiData);
+  console.log("apiData", apiData);
 
   return (
     <>
@@ -69,8 +70,22 @@ function App() {
                   <div style={style}>
                     {data ? (
                       <>
-                        <CourseHeading courses={apiData.courses} />
-                        <InformationForm data={apiData.form_fields} />
+                        {apiData.user_status === "existing_user" ? (
+                          <>
+                            <LoggerCourse courses={apiData.courses} />
+                            <LoggerDetails
+                              login={apiData.priima_login}
+                              user={apiData.user_details}
+                            />
+                          </>
+                        ) : (
+                          apiData.user_status === "new_user" && (
+                            <>
+                              <CourseHeading courses={apiData.courses} />
+                              <InformationForm data={apiData.form_fields} />
+                            </>
+                          )
+                        )}
                       </>
                     ) : (
                       <RegisterMessage />
