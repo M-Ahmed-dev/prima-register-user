@@ -48,7 +48,7 @@ function App() {
           setApiData(response.data);
         }
       } catch (error) {
-        console.log(error);
+        console.log("erro message", error);
       }
     };
 
