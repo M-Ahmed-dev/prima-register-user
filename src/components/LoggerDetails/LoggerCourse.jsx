@@ -2,6 +2,7 @@ import { Box, Link, Text, useTheme } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
 const LoggerCourse = ({ courses }) => {
+  console.log("courses link", courses);
   const theme = useTheme();
   const [loading, setLoading] = useState(true);
 
@@ -25,10 +26,14 @@ const LoggerCourse = ({ courses }) => {
         ) : (
           <>
             {Object.keys(courses).map((course) => (
-              <Text key={course} sx={theme.fonts.primary}>
-                {courses[course]?.name}{" "}
-                <Link>({courses[course]?.description})</Link>
-              </Text>
+              <Link
+                target="_blank" // Open link in a new tab
+                href={courses[course]?.course_link}
+              >
+                <Text key={course} sx={theme.fonts.primary}>
+                  {courses[course]?.name} ({courses[course]?.description})
+                </Text>
+              </Link>
             ))}
           </>
         )}

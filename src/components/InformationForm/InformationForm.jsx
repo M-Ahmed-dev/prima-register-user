@@ -10,92 +10,60 @@ import {
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-const InformationForm = ({ data }) => {
+const InformationForm = ({ formData, email, postUrl }) => {
+  const formStyles = {
+    display: "grid",
+    gridTemplateColumns: "auto auto",
+    alignItems: "baseline",
+    columnGap: "25px",
+    "@media screen and (width: 768px)": {
+      display: "flex",
+      flexDirection: "column",
+    },
+  };
+
+  const [formFields, setFormFields] = useState({});
+  const [responseData, setResponseData] = useState(null); // Add this line
   const theme = useTheme();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (data) {
+    if (formData) {
       setLoading(false);
+      setFormFields((prev) => ({
+        ...prev,
+        fields_data: {
+          ...prev.fields_data,
+          basic: {
+            ...prev.basic,
+            email: email,
+          },
+        },
+      }));
     }
-  }, [data]);
+  }, [email, formData]);
 
-  const renderFields = (fields) => {
-    return Object.keys(fields).map((fieldKey) => {
-      const field = fields[fieldKey];
-      const isVisible =
-        field.visibility === "on" || field.visibility === "optional";
+  const submitHandler = (e) => {
+    e.preventDefault();
+    const parsedData = JSON.stringify(formFields);
+    console.log("json stringfy data", parsedData);
 
-      const isRequired = field.visibility === "on";
-
-      if (isVisible) {
-        return (
-          <FormControl
-            key={fieldKey}
-            marginTop={fieldKey !== "first_name" ? "10px" : 0}
-          >
-            <FormLabel sx={theme.fonts.secondary}>
-              {field.name}{" "}
-              {isRequired && (
-                <Text as="span" sx={theme.fonts.secondary}>
-                  *
-                </Text>
-              )}
-            </FormLabel>
-            <Input
-              background="#fff"
-              maxWidth="100%"
-              width="313px"
-              height="25px"
-              placeholder={field.name}
-              boxShadow="0px 0px 2px 0px rgba(33, 91, 124, 0.50) inset"
-              size="sm"
-              borderRadius="5px"
-              sx={{
-                "&::placeholder": {
-                  fontSize: "13px",
-                },
-              }}
-            />
-          </FormControl>
-        );
-      }
-
-      return null;
-    });
+    axios
+      .post(postUrl, parsedData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        setResponseData(response.data); // Add this line
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
-  //
-
-  const handleSubmit = async () => {
-    const endpoint =
-      "https://maxenius.agency/staging/obetus/wp-json/priima_user/create?key=eyJvcmRlcl9pZCI6ODk4NSwiaXRlbV9pZCI6MzIsInZfaWQiOjEwMzgsImVtYWlsIjoiMnNhbXBsZUBibGsuY2MiLCJlbmRwb2ludCI6Imh0dHBzOlwvXC9tYXhlbml1cy5hZ2VuY3lcL3N0YWdpbmdcL29iZXR1c1wvd3AtanNvblwvcHJpaW1hX3VzZXJcLyJ9";
-
-    const requestData = {
-      fields_data: {
-        basic: {
-          email: data.basic.find((item) => item.label === "User Email").value,
-          first_name: data.basic.find((item) => item.label === "User Name")
-            .value,
-          phone: data.basic.find((item) => item.label === "User Phone").value,
-        },
-        additional: {
-          // Populate additional fields here
-          // Example:
-          // "67453": "samsdfk ",
-          // "41522": "sdfg sfxcc",
-          // "26288": "sdfr sfxcc"
-        },
-      },
-    };
-
-    try {
-      const response = await axios.post(endpoint, requestData);
-      console.log("Response:", response.data); // You can handle the response here
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
+  console.log("formFields", formFields);
 
   return (
     <Box
@@ -112,38 +80,108 @@ const InformationForm = ({ data }) => {
             Information:
           </Text>
         </Box>
-        <Box
-          mt="64px"
-          display="grid"
-          gridTemplateColumns="auto auto"
-          // gridTemplateColumns="repeat(auto-fit, minmax(200px, 1fr))" /* Responsive grid */
-          alignItems="baseline"
-          gap="25px"
-          sx={{
-            "@media screen and (max-width: 768px)": {
-              display: "flex",
-              flexDirection: "column",
-            },
-          }}
-        >
+        <Box mt="64px">
           {loading ? (
             <Text>Loading...</Text>
           ) : (
-            <>
-              {renderFields(data.basic)}
-              {renderFields(data.additional)}
-            </>
+            <form sx={formStyles} onSubmit={submitHandler}>
+              {Object.keys(formData.basic).map((fieldKey) => {
+                return (
+                  <FormControl
+                    key={fieldKey}
+                    marginTop={fieldKey !== "first_name" ? "10px" : 0}
+                  >
+                    <FormLabel sx={theme.fonts.secondary}>
+                      {formData.basic[fieldKey].name}
+                    </FormLabel>
+                    <Input
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setFormFields((prev) => ({
+                          ...prev,
+                          fields_data: {
+                            ...prev.fields_data,
+                            basic: {
+                              ...prev.fields_data.basic,
+                              [fieldKey]: value,
+                              email: email,
+                            },
+                          },
+                        }));
+                      }}
+                      background="#fff"
+                      maxWidth="100%"
+                      width="313px"
+                      height="25px"
+                      placeholder={formData.basic[fieldKey].id}
+                      disabled={formData.basic[fieldKey].name === "Email"} // Disable based on the condition
+                      boxShadow="0px 0px 2px 0px rgba(33, 91, 124, 0.50) inset"
+                      size="sm"
+                      borderRadius="5px"
+                      sx={{
+                        "&::placeholder": {
+                          fontSize: "13px",
+                        },
+                      }}
+                    />
+                  </FormControl>
+                );
+              })}
+
+              {Object.keys(formData.additional).map((fieldKey) => {
+                return (
+                  <FormControl
+                    key={fieldKey}
+                    marginTop={fieldKey !== "first_name" ? "10px" : 0}
+                  >
+                    <FormLabel sx={theme.fonts.secondary}>
+                      {formData.additional[fieldKey].name}
+                    </FormLabel>
+                    <Input
+                      background="#fff"
+                      maxWidth="100%"
+                      width="313px"
+                      height="25px"
+                      placeholder="Field Name"
+                      boxShadow="0px 0px 2px 0px rgba(33, 91, 124, 0.50) inset"
+                      size="sm"
+                      borderRadius="5px"
+                      sx={{
+                        "&::placeholder": {
+                          fontSize: "13px",
+                        },
+                      }}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setFormFields((prev) => ({
+                          ...prev,
+                          fields_data: {
+                            ...prev.fields_data,
+                            additional: {
+                              ...prev.fields_data.additional,
+                              [fieldKey]: value,
+                            },
+                          },
+                        }));
+                      }}
+                    />
+                  </FormControl>
+                );
+              })}
+
+              <Button
+                mt="86px"
+                display="flex"
+                width="200px"
+                color="#FFF"
+                type="submit"
+                background={theme.colors.primary}
+              >
+                Confirm
+              </Button>
+            </form>
           )}
         </Box>
-        <Button
-          mt="86px"
-          display="flex"
-          width="200px"
-          color="#FFF"
-          background={theme.colors.primary}
-        >
-          Confirm
-        </Button>
       </Box>
     </Box>
   );

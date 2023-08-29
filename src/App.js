@@ -1,13 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Route, Routes, useSearchParams } from "react-router-dom";
-import CourseHeading from "./components/CourseHeading/CourseHeading";
 import Footer from "./components/Footer/Footer";
-import InformationForm from "./components/InformationForm/InformationForm";
-import LoggerCourse from "./components/LoggerDetails/LoggerCourse";
-import LoggerDetails from "./components/LoggerDetails/LoggerDetails";
 import Navbar from "./components/Navbar/Navbar";
 import RegisterMessage from "./components/RegisterMessage/RegisterMessage";
+import RegisterUser from "./components/RegisterUser/RegisterUser";
 
 const style = {
   maxWidth: "1000px",
@@ -21,23 +18,28 @@ const background = {
 
 function App() {
   const [apiData, setApiData] = useState([]);
-  let [searchParams] = useSearchParams();
+  const [newResponse, setNewResponse] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  let [searchParams] = useSearchParams();
   const data = searchParams.get("data");
   let newData = null;
 
   if (data) {
     try {
       newData = JSON.parse(atob(data));
+      console.log("newData", newData.email);
     } catch (error) {
       console.error("Error parsing newData:", error);
     }
   }
 
-  let url = ""; // Initialize the URL
+  let url = "";
+  let postUrl = "";
 
   if (newData && newData.endpoint) {
     url = `${newData.endpoint}verification/?data=${data}`;
+    postUrl = `${newData.endpoint}create/?key=${data}`;
   }
 
   useEffect(() => {
@@ -45,17 +47,51 @@ function App() {
       try {
         if (url) {
           const response = await axios.get(url);
-          setApiData(response.data);
+
+          const updatedData = {
+            ...response.data,
+            form_fields: {
+              ...response.data.form_fields,
+              basic: {
+                ...response.data.form_fields.basic,
+                email: {
+                  id: newData.email,
+                  name: "Email",
+                  restricted: "1",
+                  definition: {
+                    type: "text",
+                    options: "",
+                  },
+                  visibility: "on",
+                },
+              },
+            },
+          };
+          setApiData(updatedData);
         }
       } catch (error) {
-        console.log("erro message", error);
+        console.log("error message", error);
       }
     };
-
     fetchData();
-  }, [data, url]);
+  }, [data, newData?.email, url]);
 
-  console.log("apiData", apiData);
+  //
+
+  useEffect(() => {
+    axios
+      .get(url)
+      .then((response) => {
+        console.log("newResponse", response.data);
+        setNewResponse(response.data);
+
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log("error", error);
+        setLoading(false);
+      });
+  }, [url]);
 
   return (
     <>
@@ -64,36 +100,24 @@ function App() {
           path="/"
           element={
             <>
-              <>
-                <Navbar />
-                <div style={background}>
-                  <div style={style}>
-                    {data ? (
-                      <>
-                        {apiData.user_status === "existing_user" ? (
-                          <>
-                            <LoggerCourse courses={apiData.courses} />
-                            <LoggerDetails
-                              login={apiData.priima_login}
-                              user={apiData.user_details}
-                            />
-                          </>
-                        ) : (
-                          apiData.user_status === "new_user" && (
-                            <>
-                              <CourseHeading courses={apiData.courses} />
-                              <InformationForm data={apiData.form_fields} />
-                            </>
-                          )
-                        )}
-                      </>
-                    ) : (
-                      <RegisterMessage />
-                    )}
-                  </div>
+              <Navbar />
+              <div style={background}>
+                <div style={style}>
+                  {loading ? (
+                    <div>Loading.....</div>
+                  ) : data ? (
+                    <RegisterUser
+                      apiData={apiData}
+                      newData={newData}
+                      postUrl={postUrl}
+                      newResponse={newResponse}
+                    />
+                  ) : (
+                    <RegisterMessage />
+                  )}
                 </div>
-                <Footer />
-              </>
+              </div>
+              <Footer />
             </>
           }
         />

@@ -2,6 +2,7 @@ import { Box, Button, Link, Text, useTheme } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
 const LoggerDetails = ({ user, login }) => {
+  console.log("userPassword", user);
   const theme = useTheme();
   const [loading, setLoading] = useState(true);
 
@@ -24,7 +25,7 @@ const LoggerDetails = ({ user, login }) => {
       <Box
         mt="59px"
         borderRadius="10px"
-        height="598px"
+        // height="598px"
         background="#E6F2F3"
         boxShadow="0px 2px 5px 0px rgba(33, 91, 124, 0.15)"
         padding="50px 130px"
@@ -50,12 +51,28 @@ const LoggerDetails = ({ user, login }) => {
                     {user.username.value}
                   </Text>
                 </Box>
+
+                {/* <Box>
+                  <Text color={theme.colors.primary} fontWeight="500">
+                    {user.Password.label}
+                  </Text>
+                  <Text color={theme.colors.primary} fontWeight="300">
+                    {user.Password.value}
+                  </Text>
+                </Box> */}
               </Box>
 
               <Box sx={gridItems}>
                 <Box>
-                  {user.basic.map((item, i) => (
+                  {/* {user.basic.map((item, i) => (
                     <React.Fragment key={`${i + 1} ${item.value}`}>
+                      <Text sx={theme.fonts.secondary}>{item.label}</Text>
+                      <Text sx={theme.fonts.secondary}>{item.value}</Text>
+                    </React.Fragment>
+                  ))} */}
+
+                  {Object.entries(user.basic).map(([key, item]) => (
+                    <React.Fragment key={key}>
                       <Text sx={theme.fonts.secondary}>{item.label}</Text>
                       <Text sx={theme.fonts.secondary}>{item.value}</Text>
                     </React.Fragment>
@@ -63,8 +80,15 @@ const LoggerDetails = ({ user, login }) => {
                 </Box>
 
                 <Box>
-                  {user.additional.map((item, i) => (
+                  {/* {user.additional.map((item, i) => (
                     <React.Fragment key={`${i + 1} ${item.value}`}>
+                      <Text sx={theme.fonts.secondary}>{item.label}</Text>
+                      <Text sx={theme.fonts.secondary}>{item.value}</Text>
+                    </React.Fragment>
+                  ))} */}
+
+                  {Object.entries(user.additional).map(([key, item]) => (
+                    <React.Fragment key={key}>
                       <Text sx={theme.fonts.secondary}>{item.label}</Text>
                       <Text sx={theme.fonts.secondary}>{item.value}</Text>
                     </React.Fragment>
@@ -83,7 +107,9 @@ const LoggerDetails = ({ user, login }) => {
           color="#FFF"
           background={theme.colors.primary}
         >
-          <Link href={login}>Login in to Priima</Link>
+          <Link target="_blank" href={login}>
+            Login in to Priima
+          </Link>
         </Button>
       </Box>
     </>
